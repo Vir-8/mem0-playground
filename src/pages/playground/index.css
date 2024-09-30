@@ -1,0 +1,96 @@
+body, div {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.playground-container {
+  height: 100vh;
+  position: fixed;
+  width: 100vw;
+}
+
+.header {
+  height: 56px;
+  border-bottom: 1px solid rgb(244, 244, 245);
+}
+
+.body {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 56px);
+}
+
+.body > div {
+  border-right: 1px solid rgb(244, 244, 245);
+  height: 100%;
+}
+
+.chat-container > div {
+  height: 100%;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding-top: 19px;
+  width: 180px;
+}
+
+.chat-container {
+  width: calc(100vw - 180px);
+}
+
+.chat-list-container {
+  padding-bottom: 40px;
+}
+
+.chat {
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  --tw-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -2px rgba(0, 0, 0, .1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+}
+
+.chat-bar-container {
+  width: 100%;
+}
+
+.chat-bar {
+  background-image: linear-gradient(to bottom left, var(--tw-gradient-stops));
+  border-width: 1px;
+  border-radius: 26px;
+  --tw-gradient-from: hsl(var(--accent) / 0.5) var(--tw-gradient-from-position);
+  --tw-gradient-to: hsl(var(--accent) / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.chat-content > div {
+  overflow-y: scroll;
+  max-height: calc(100% - 110px);
+  padding-bottom: 40px;
+  scrollbar-width: thin;
+  scrollbar-color: #b8b8b8 #dfdfdf;
+}
+
+.chat-bar textarea {
+  align-items: center;
+  background-color: white;
+  border-width: 1px;
+  border-radius: 26px;
+  display: flex;
+  height: 50px;
+  max-height: 120px;
+  min-height: 50px;
+  padding: 14px 40px 10px 28px;
+}
+
+.chat-bar textarea:focus {
+  border-color: hsl(var(--accent));
+  --tw-ring-offset-width: 0;
+}
+
+.chat-bar .submit-val {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 10px;
+}

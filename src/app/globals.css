@@ -5,19 +5,48 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --secondary: 240 4.8% 95.9%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.hover\:bg-accent:hover {
+  background-color: hsl(var(--accent))
+}
+
+.hover\:bg-accent\/30:hover {
+  background-color: hsl(var(--accent) / .3);
+}
+
+.hover\:bg-accent\/50:hover {
+  background-color: hsl(var(--accent) / .5);
+}
+
+.hover\:bg-accent\/80:hover {
+  background-color: hsl(var(--accent) / .8);
+}
+
+.hover\:text-accent-foreground:hover {
+  color: hsl(var(--accent-foreground))
+}
+
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+
+.bg-secondary {
+  background-color: hsl(var(--secondary));
+}
+
+@font-face {
+  font-family: 'font-geist';
+  src: url('/fonts/GeistMonoVF.woff2') format('woff2');
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
