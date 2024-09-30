@@ -1,4 +1,3 @@
-// src/components/ChatItem.tsx
 import React from "react";
 
 type ChatListItemProps = {

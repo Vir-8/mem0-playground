@@ -62,6 +62,7 @@ export default function Playground() {
     setInputValue("");
   };
 
+  // Send a message to the backend and render LLM response in the chat.
   const sendMessage = async (message: string) => {
     setIsLoading(true);
     const url = "/api/chat";
@@ -78,6 +79,7 @@ export default function Playground() {
     });
   };
 
+  // On sending a message in an empty chat, store it as a new chat.
   const handleNewChat = (title: string) => {
     const newChat = chatService.createNewChat(title, currentChat?.id || null);
     chatService.setCurrentChatId(newChat.id);
@@ -86,23 +88,27 @@ export default function Playground() {
     chatService.updateChat({ type: "user", message: inputValue });
   };
 
+  // Select a chat from the list of chats.
   const selectChat = (selectedChat: Chat) => {
     setCurrentChat(selectedChat);
     chatService.setCurrentChatId(selectedChat.id);
   };
 
+  // Update the chat log on switching current chat.
   useEffect(() => {
     if (currentChat && currentChat.title) {
       setChatLog(chatService.getMessages(currentChat.id));
     }
   }, [currentChat]);
 
+  // Scroll to the bottom of the chat by default.
   useEffect(() => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
   }, [chatLog]);
 
+  // Load existing chats on initialization.
   useEffect(() => {
     const loadedChats = chatService.getChats();
     setChats(loadedChats);
@@ -236,8 +242,8 @@ export default function Playground() {
                 <div className="pt-0 px-2 pb-2">
                   <form
                     onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                      e.preventDefault(); // Prevent page reload
-                      handleSubmit(); // Call your submit function
+                      e.preventDefault();
+                      handleSubmit();
                     }}
                     className="flex justify-between w-full gap-2 chat-bar"
                   >
@@ -249,8 +255,8 @@ export default function Playground() {
                       onChange={(e) => setInputValue(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault(); // Prevent new line
-                          handleSubmit(); // Call submit on Enter key press
+                          e.preventDefault();
+                          handleSubmit();
                         }
                       }}
                     ></textarea>
