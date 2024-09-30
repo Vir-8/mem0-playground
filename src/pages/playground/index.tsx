@@ -4,7 +4,7 @@ import axios from "axios";
 import Memories from "@/components/Memories";
 import {ChatList} from "@/components/ChatList";
 import TypingAnimation from "@/components/TypingAnimation";
-import { chatService } from "./chatService";
+import { chatService } from "../../services/chatService";
 import { Chat } from "@/components/ChatList";
 import Link from "next/link";
 

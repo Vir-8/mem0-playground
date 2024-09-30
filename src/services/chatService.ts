@@ -1,5 +1,5 @@
 import { Chat } from "@/components/ChatList";
-import { ChatMessage } from ".";
+import { ChatMessage } from "../pages/playground";
 
 let currentChatId: number
 
