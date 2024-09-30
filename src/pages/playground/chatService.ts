@@ -1,7 +1,7 @@
 import { Chat } from "@/components/ChatList";
 import { ChatMessage } from ".";
 
-let currentChatId: Number
+let currentChatId: number
 
 export const chatService = {
   getChats: () => {

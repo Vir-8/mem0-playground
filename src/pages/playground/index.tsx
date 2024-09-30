@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import "./index.css";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import axios from "axios";
-import ChatListItem from "@/components/ChatListItem";
 import Memories from "@/components/Memories";
 import {ChatList} from "@/components/ChatList";
 import TypingAnimation from "@/components/TypingAnimation";
 import { chatService } from "./chatService";
 import { Chat } from "@/components/ChatList";
+import Link from "next/link";
 
 export interface ChatMessage {
   type: "user" | "bot"; // Define the types for the message
@@ -133,12 +132,12 @@ export default function Playground() {
             Dashboard
           </a>
           <a className="text-sm font-medium cursor-pointer px-4 py-2">Users</a>
-          <a
+          <Link
             href="/playground"
             className="text-sm font-medium cursor-pointer text-primary bg-indigo-100 px-4 py-2"
           >
             Playground
-          </a>
+          </Link>
         </div>
         <div>
           <div className="chat-container flex pt-2.5 h-full">

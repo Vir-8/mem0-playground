@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>") // Convert **text** to <strong>text</strong>
       .replace(/- (.*?)(?=<br>|$)/g, "<li>$1</li>") // Convert bullet points to <li>
     res.status(200).json({ response: `${formattedResponse}` });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: 'Something went wrong...' });
   }
 }

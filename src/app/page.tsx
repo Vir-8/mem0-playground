@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Playground from "../pages/playground";
 
 export default function Home() {
   return (

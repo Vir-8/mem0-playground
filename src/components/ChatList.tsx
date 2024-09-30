@@ -12,7 +12,7 @@ interface ChatListProps {
   chats: Chat[];
   onSelectChat: (chat: Chat) => void;
   onNewChat: () => void;
-  currentChatId: Number | null;
+  currentChatId: number | null;
 }
 
 export const ChatList: React.FC<ChatListProps> = ({
