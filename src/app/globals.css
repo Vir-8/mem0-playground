@@ -44,6 +44,16 @@
   src: url('/fonts/GeistMonoVF.woff2') format('woff2');
 }
 
+.main-page {
+  color: #ededed;
+  background: #0a0a0a;
+}
+
+.main-page .text-background, .main-page .bg-foreground {
+  color: #0a0a0a;
+  background: #ededed;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
