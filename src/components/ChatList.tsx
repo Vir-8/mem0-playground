@@ -28,7 +28,6 @@ export const ChatList: React.FC<ChatListProps> = ({
   };
 
   const handleSelectChat = (chat: Chat) => {
-    console.log(`selecting ${chat.title}`);
     onSelectChat(chat);
   };
 
@@ -53,7 +52,7 @@ export const ChatList: React.FC<ChatListProps> = ({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`lucide lucide-chevron-left h-4 w-4 transition-transform ease-in-out duration-500 rotate-0 ${isCollapsed ? 'rotate-180' : 'rotate-0'}`}
+            className={`lucide lucide-chevron-left h-4 w-4 transition-transform ease-in-out duration-500 ${isCollapsed ? "rotate-180" : "rotate-0"}`}
           >
             <path d="m15 18-6-6 6-6"></path>
           </svg>

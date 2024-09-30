@@ -12,23 +12,23 @@
 }
 
 .hover\:bg-accent:hover {
-  background-color: hsl(var(--accent))
+  background-color: hsl(var(--accent));
 }
 
 .hover\:bg-accent\/30:hover {
-  background-color: hsl(var(--accent) / .3);
+  background-color: hsl(var(--accent) / 0.3);
 }
 
 .hover\:bg-accent\/50:hover {
-  background-color: hsl(var(--accent) / .5);
+  background-color: hsl(var(--accent) / 0.5);
 }
 
 .hover\:bg-accent\/80:hover {
-  background-color: hsl(var(--accent) / .8);
+  background-color: hsl(var(--accent) / 0.8);
 }
 
 .hover\:text-accent-foreground:hover {
-  color: hsl(var(--accent-foreground))
+  color: hsl(var(--accent-foreground));
 }
 
 .text-muted-foreground {
@@ -40,8 +40,8 @@
 }
 
 @font-face {
-  font-family: 'font-geist';
-  src: url('/fonts/GeistMonoVF.woff2') format('woff2');
+  font-family: "font-geist";
+  src: url("/fonts/GeistMonoVF.woff2") format("woff2");
 }
 
 .main-page {
@@ -49,7 +49,8 @@
   background: #0a0a0a;
 }
 
-.main-page .text-background, .main-page .bg-foreground {
+.main-page .text-background,
+.main-page .bg-foreground {
   color: #0a0a0a;
   background: #ededed;
 }

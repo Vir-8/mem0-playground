@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import "./index.css";
 import axios from "axios";
 import Memories from "@/components/Memories";
-import {ChatList} from "@/components/ChatList";
+import { ChatList } from "@/components/ChatList";
 import TypingAnimation from "@/components/TypingAnimation";
 import { chatService } from "../../services/chatService";
 import { Chat } from "@/components/ChatList";
@@ -11,7 +11,7 @@ import Link from "next/link";
 export interface ChatMessage {
   type: "user" | "bot"; // Define the types for the message
   message: string;
-};
+}
 
 export default function Playground() {
   const [inputValue, setInputValue] = useState("");
@@ -34,16 +34,18 @@ export default function Playground() {
     </ul> <br />
 
     <p>Go ahead, ask me anything! Let's make your experience extraordinary. 🌟</p>
-  `
+  `;
 
   const createEmptyChat = () => {
-    const emptyChat: Chat = { id: Date.now(), title: '', messages: [{type: "bot", message: dummyMessage}] };
+    const emptyChat: Chat = {
+      id: Date.now(),
+      title: "",
+      messages: [{ type: "bot", message: dummyMessage }],
+    };
     setCurrentChat(emptyChat);
-    chatService.setCurrentChatId(emptyChat.id)
-    chatService.updateChat({ type: "bot", message: dummyMessage })
-    setChatLog(() => [
-      {type: "bot", message: dummyMessage},
-    ]);
+    chatService.setCurrentChatId(emptyChat.id);
+    chatService.updateChat({ type: "bot", message: dummyMessage });
+    setChatLog(() => [{ type: "bot", message: dummyMessage }]);
   };
 
   const handleSubmit = () => {
@@ -52,9 +54,9 @@ export default function Playground() {
       { type: "user", message: inputValue },
     ]);
     if (!currentChat || !currentChat.title) {
-      handleNewChat(inputValue)
+      handleNewChat(inputValue);
     } else if (currentChat) {
-      chatService.updateChat({ type: "user", message: inputValue })
+      chatService.updateChat({ type: "user", message: inputValue });
     }
     sendMessage(inputValue);
     setInputValue("");
@@ -62,37 +64,35 @@ export default function Playground() {
 
   const sendMessage = async (message: string) => {
     setIsLoading(true);
-    const url = '/api/chat'
+    const url = "/api/chat";
     const data = {
-      userMessage: message
-    }
+      userMessage: message,
+    };
     axios.post(url, data).then((response) => {
-      console.log(response)
-      setIsLoading(false)
-      chatService.updateChat({ type: "bot", message: response.data.response })
+      setIsLoading(false);
+      chatService.updateChat({ type: "bot", message: response.data.response });
       setChatLog((prevChatLog) => [
         ...prevChatLog,
         { type: "bot", message: response.data.response },
       ]);
-    })
+    });
   };
 
   const handleNewChat = (title: string) => {
     const newChat = chatService.createNewChat(title, currentChat?.id || null);
-    chatService.setCurrentChatId(newChat.id)
+    chatService.setCurrentChatId(newChat.id);
     setCurrentChat(() => newChat);
     setChats([...chats, newChat]);
-    chatService.updateChat({ type: "user", message: inputValue })
+    chatService.updateChat({ type: "user", message: inputValue });
   };
 
   const selectChat = (selectedChat: Chat) => {
-    setCurrentChat(selectedChat)
-    chatService.setCurrentChatId(selectedChat.id)
-  }
+    setCurrentChat(selectedChat);
+    chatService.setCurrentChatId(selectedChat.id);
+  };
 
   useEffect(() => {
     if (currentChat && currentChat.title) {
-      console.log(currentChat);
       setChatLog(chatService.getMessages(currentChat.id));
     }
   }, [currentChat]);
@@ -101,15 +101,13 @@ export default function Playground() {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
-  }, [chatLog])
+  }, [chatLog]);
 
   useEffect(() => {
     const loadedChats = chatService.getChats();
     setChats(loadedChats);
     createEmptyChat();
   }, []);
-
-  
 
   return (
     <div className="playground-container">
@@ -141,8 +139,8 @@ export default function Playground() {
         </div>
         <div>
           <div className="chat-container flex pt-2.5 h-full">
-            <ChatList 
-              chats={chats} 
+            <ChatList
+              chats={chats}
               onSelectChat={(chat) => selectChat(chat)}
               onNewChat={createEmptyChat}
               currentChatId={currentChat ? currentChat.id : null}
@@ -214,14 +212,15 @@ export default function Playground() {
                             ? "px-2 rounded-bl-xl"
                             : "bg-secondary px-5 rounded-br-xl"
                         }`}
-                        dangerouslySetInnerHTML={{ __html: message.message }} 
-                      >
-                      </div>
+                        dangerouslySetInnerHTML={{ __html: message.message }}
+                      ></div>
                     </div>
                   ))}
-                  {
-                    isLoading &&
-                    <div key={chatLog.length} className="flex p-4 gap-3 justify-start">
+                  {isLoading && (
+                    <div
+                      key={chatLog.length}
+                      className="flex p-4 gap-3 justify-start"
+                    >
                       <div className="relative shrink-0 overflow-hidden rounded-full flex self-center w-7 h-7">
                         <img src="/images/mem0.png" alt="Mem0 Icon" />
                       </div>
@@ -229,7 +228,7 @@ export default function Playground() {
                         <TypingAnimation />
                       </div>
                     </div>
-                  }
+                  )}
                 </div>
               </div>
 

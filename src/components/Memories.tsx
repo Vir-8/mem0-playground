@@ -24,7 +24,7 @@ export default function Memories() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`lucide lucide-chevron-right h-4 w-4 transition-transform ease-in-out duration-500 ${isCollapsed ? '-rotate-180' : 'rotate-0'}`}
+            className={`lucide lucide-chevron-right h-4 w-4 transition-transform ease-in-out duration-500 ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
           >
             <path d="m9 18 6-6-6-6"></path>
           </svg>
