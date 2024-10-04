@@ -9,7 +9,7 @@ export default async function handler(
 
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Only POST requests are allowed" });
-  } else if (process.env.NODE_ENV !== "development") {
+  } else if (process.env.DEBUG !== "True") {
     if (!referer || referer !== process.env.APP_URL) {
       return res.status(401).json({ message: "Unauthorized" });
     }
