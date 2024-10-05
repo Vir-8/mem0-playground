@@ -65,9 +65,10 @@ export default function Playground() {
   // Send a message to the backend and render LLM response in the chat.
   const sendMessage = async (message: string) => {
     setIsLoading(true);
-    const url = "/api/chat";
+    const url = "http://localhost:8000/api/generate-response/";
     const data = {
       userMessage: message,
+      userId: 'new_user'
     };
     axios.post(url, data).then((response) => {
       setIsLoading(false);

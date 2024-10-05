@@ -1,16 +1,13 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
 import os
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import google.generativeai as genai
+from mem0 import Memory
+from mem0.proxy.main import Mem0
+from config.env import env
 
-@csrf_exempt  # This bypasses CSRF protection for API endpoints, adjust as per your security needs
+@csrf_exempt
 def handle_message(request):
     # Check if the request is a POST
     if request.method != "POST":
@@ -26,6 +23,7 @@ def handle_message(request):
     try:
         data = json.loads(request.body)
         user_message = data.get('userMessage')
+        user_id = data.get('userId')
     except (json.JSONDecodeError, KeyError):
         return JsonResponse({"message": "User message is required"}, status=400)
 
@@ -34,14 +32,49 @@ def handle_message(request):
 
     # Interact with Google Generative AI
     try:
-        genai.configure(api_key=os.environ["GEMINI_KEY"])
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        result = model.generate_content(user_message)
-        ai_response = result.text
+        config = {
+            "embedder": {
+                "provider": "gemini",
+                "config": {
+                    "model": "models/text-embedding-004"
+                }
+            },
+            "vector_store": {
+                "provider": "qdrant",
+                "config": {
+                    "collection_name": "test",
+                    "embedding_model_dims": 768,
+                }
+            },
+            "llm": {
+                "provider": "litellm",
+                "config": {
+                    "model": "gemini/gemini-1.5-flash",
+                    "temperature": 0.2,
+                    "max_tokens": 1500,
+                    "api_key": env("GEMINI_API_KEY")
+                }
+            }
+        }
 
-        # Format the response similar to the Next.js handler
+        client = Mem0(api_key=env("MEM0_KEY"), config=config)
+
+        messages = [
+          {
+            "role": "user",
+            "content": user_message,
+          }
+        ]
+
+        chat_completion = client.chat.completions.create(
+            messages=messages,
+            model="gemini/gemini-1.5-flash",
+            user_id=user_id,
+            api_key=env("GEMINI_API_KEY")
+        )
+        print(chat_completion)
         formatted_response = (
-            ai_response
+            chat_completion.choices[0].message.content
             .replace("\n", "<br />")  # Convert new lines to <br />
             .replace(r"\*\*(.*?)\*\*", r"<strong>\1</strong>")  # Convert **text** to <strong>text</strong>
             .replace(r"- (.*?)(?=<br>|$)", r"<li>\1</li>")  # Convert bullet points to <li>
@@ -49,4 +82,4 @@ def handle_message(request):
 
         return JsonResponse({"response": formatted_response}, status=200)
     except Exception as e:
-        return JsonResponse({"message": e}, status=500)
+        return JsonResponse({"message": str(e)}, status=500)
