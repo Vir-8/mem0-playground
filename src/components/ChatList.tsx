@@ -80,7 +80,10 @@ export const ChatList: React.FC<ChatListProps> = ({
       return "Today";
     } else if (currentDayOfMonth === dayOfMonth + 1) {
       return "Yesterday";
-    } else if (currentDayOfMonth >= dayOfMonth + 7) {
+    } else if (
+      currentDayOfMonth > dayOfMonth + 1 &&
+      currentDayOfMonth <= dayOfMonth + 7
+    ) {
       return "Last Week";
     } else {
       return "Older";
@@ -124,42 +127,43 @@ export const ChatList: React.FC<ChatListProps> = ({
                   No chats found! Type a message to start one.
                 </p>
               )}
-              {chats
-                .slice()
-                .reverse()
-                .map((chat: Chat) => {
-                  const currentCategory = getDateCategory(chat.id);
-                  const showHeader = currentCategory !== lastCategory;
-                  lastCategory = currentCategory;
+              {chats &&
+                chats
+                  .slice()
+                  .reverse()
+                  .map((chat: Chat) => {
+                    const currentCategory = getDateCategory(chat.id);
+                    const showHeader = currentCategory !== lastCategory;
+                    lastCategory = currentCategory;
 
-                  return (
-                    <React.Fragment key={`${currentCategory}-${chat.id}`}>
-                      {showHeader && (
-                        <p
-                          key={currentCategory}
-                          className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate"
+                    return (
+                      <React.Fragment key={`${currentCategory}-${chat.id}`}>
+                        {showHeader && (
+                          <p
+                            key={currentCategory}
+                            className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate"
+                          >
+                            {currentCategory}
+                          </p>
+                        )}
+                        <div
+                          key={chat.id}
+                          onClick={() => handleSelectChat(chat)}
+                          className={`${
+                            currentChatId && currentChatId === chat.id
+                              ? "bg-secondary"
+                              : ""
+                          }`}
                         >
-                          {currentCategory}
-                        </p>
-                      )}
-                      <div
-                        key={chat.id}
-                        onClick={() => handleSelectChat(chat)}
-                        className={`${
-                          currentChatId && currentChatId === chat.id
-                            ? "bg-secondary"
-                            : ""
-                        }`}
-                      >
-                        <ChatListItem
-                          title={chat.title}
-                          date={getFormattedDate(chat.id)}
-                          id={chat.id}
-                        />
-                      </div>
-                    </React.Fragment>
-                  );
-                })}
+                          <ChatListItem
+                            title={chat.title}
+                            date={getFormattedDate(chat.id)}
+                            id={chat.id}
+                          />
+                        </div>
+                      </React.Fragment>
+                    );
+                  })}
             </li>
           )}
         </ul>

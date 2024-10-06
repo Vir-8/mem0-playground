@@ -60,15 +60,17 @@ export default function Playground() {
 
   // Create an empty chat on opening the page or clicking the create button.
   const createEmptyChat = () => {
-    const emptyChat: Chat = {
-      id: Date.now(),
-      title: "",
-      messages: [{ type: "bot", message: dummyMessage }],
-    };
-    setCurrentChat(emptyChat);
-    chatService.setCurrentChatId(emptyChat.id);
-    chatService.updateChat({ type: "bot", message: dummyMessage });
-    setChatLog(() => [{ type: "bot", message: dummyMessage }]);
+    if (!isLoading) {
+      const emptyChat: Chat = {
+        id: Date.now(),
+        title: "",
+        messages: [{ type: "bot", message: dummyMessage }],
+      };
+      setCurrentChat(emptyChat);
+      chatService.setCurrentChatId(emptyChat.id);
+      chatService.updateChat({ type: "bot", message: dummyMessage });
+      setChatLog(() => [{ type: "bot", message: dummyMessage }]);
+    }
   };
 
   // Handle submitting input in the chat interface.
@@ -261,35 +263,38 @@ export default function Playground() {
                 )}
                 <div className="chat-content h-full">
                   <div ref={chatAreaRef} className="flex flex-col pb-24">
-                    {chatLog.map((message, index) => (
-                      <div
-                        key={index}
-                        className={`flex p-4 gap-3 justify-start ${
-                          message.type === "user"
-                            ? "flex-row-reverse"
-                            : "flex-row"
-                        }`}
-                      >
-                        <div className="relative shrink-0 overflow-hidden rounded-full flex self-center w-7 h-7">
-                          <img
-                            src={`${
-                              message.type === "user"
-                                ? "/images/user.svg"
-                                : "/images/mem0.png"
-                            }`}
-                            alt="User Icon"
-                          />
-                        </div>
+                    {chatLog &&
+                      chatLog.map((message, index) => (
                         <div
-                          className={`py-3 rounded-t-xl transition-none max-w-2xl block bg-card ${
+                          key={index}
+                          className={`flex p-4 gap-3 justify-start ${
                             message.type === "user"
-                              ? "px-2 rounded-bl-xl"
-                              : "bg-secondary px-5 rounded-br-xl"
+                              ? "flex-row-reverse"
+                              : "flex-row"
                           }`}
-                          dangerouslySetInnerHTML={{ __html: message.message }}
-                        ></div>
-                      </div>
-                    ))}
+                        >
+                          <div className="relative shrink-0 overflow-hidden rounded-full flex self-center w-7 h-7">
+                            <img
+                              src={`${
+                                message.type === "user"
+                                  ? "/images/user.svg"
+                                  : "/images/mem0.png"
+                              }`}
+                              alt="User Icon"
+                            />
+                          </div>
+                          <div
+                            className={`py-3 rounded-t-xl transition-none max-w-2xl block bg-card ${
+                              message.type === "user"
+                                ? "px-2 rounded-bl-xl"
+                                : "bg-secondary px-5 rounded-br-xl"
+                            }`}
+                            dangerouslySetInnerHTML={{
+                              __html: message.message,
+                            }}
+                          ></div>
+                        </div>
+                      ))}
                     {isLoading && (
                       <div
                         key={chatLog.length}

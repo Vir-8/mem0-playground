@@ -143,17 +143,18 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
             </div>
           </div>
           <div dir="ltr" className="relative overflow-hidden flex-grow px-2">
-            {memories
-              .slice()
-              .reverse()
-              .map((memory) => (
-                <MemoryItem
-                  key={memory.id}
-                  memory={memory.memory}
-                  categories={memory.categories}
-                  updated_at={memory.updated_at}
-                />
-              ))}
+            {memories &&
+              memories
+                .slice()
+                .reverse()
+                .map((memory) => (
+                  <MemoryItem
+                    key={memory.id}
+                    memory={memory.memory}
+                    categories={memory.categories}
+                    updated_at={memory.updated_at}
+                  />
+                ))}
             {memories.length === 0 && (
               <p className="mt-4 text-center">
                 No memories found. Your memories will appear here.
