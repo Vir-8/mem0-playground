@@ -158,17 +158,19 @@ export default function Playground() {
             height={40}
           />
         </a>
-        <div>
+        <div className="header-links flex flex-row">
           <a className="text-sm font-medium cursor-pointer px-4 py-2">
             Dashboard
           </a>
           <a className="text-sm font-medium cursor-pointer px-4 py-2">Users</a>
           <Link
             href="/playground"
-            className="text-sm font-medium cursor-pointer text-primary bg-indigo-100 px-4 py-2"
+            className="text-sm font-medium cursor-pointer px-4 py-2"
           >
             Playground
           </Link>
+          <img className="mr-6" src="/images/settings.svg" alt="Settings Icon" width={20} />
+          <img src="/images/user.svg" alt="User Icon" width={36} />
         </div>
       </div>
       <div className="body">
@@ -201,7 +203,7 @@ export default function Playground() {
                   </div>
                 </div>
                 {isModelDropdownOpen && (
-                  <div className="absolute right-0 z-10 mt-11 mr-2 w-min shadow-md rounded-md bg-white">
+                  <div className="model-selection-dropdown absolute right-0 z-10 mt-11 mr-2 w-min shadow-md rounded-md bg-white">
                     <div
                       className="py-1"
                       role="menu"
@@ -231,8 +233,8 @@ export default function Playground() {
                             <path
                               d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
                               fill="currentColor"
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
+                              fillRule="evenodd"
+                              clipRule="evenodd"
                             ></path>
                           </svg>
                           <span className="font-normal">{option.label}</span>
@@ -256,10 +258,10 @@ export default function Playground() {
                           <img
                             src={`${
                               message.type === "user"
-                                ? "/images/user.jpg"
+                                ? "/images/user.svg"
                                 : "/images/mem0.png"
                             }`}
-                            alt="Mem0 Icon"
+                            alt="User Icon"
                           />
                         </div>
                         <div

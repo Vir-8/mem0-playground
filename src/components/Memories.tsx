@@ -83,7 +83,7 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
       </div>
       {!isCollapsed && (
         <>
-          <div className="flex justify-between items-center w-full p-2">
+          <div className="flex justify-between items-center w-full p-2 pl-4">
             <div className="flex flex-1 items-center gap-2">
               <h2 className="text-med pr-2 font-semibold">Your Memories ({memories.length})</h2>
             </div>
