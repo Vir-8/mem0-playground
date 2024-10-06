@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./index.css";
 import axios from "axios";
-import Memories from "@/components/Memories";
+import {Memories} from "@/components/Memories";
 import { ChatList } from "@/components/ChatList";
 import TypingAnimation from "@/components/TypingAnimation";
 import { chatService } from "../../services/chatService";
@@ -9,7 +9,7 @@ import { Chat } from "@/components/ChatList";
 import Link from "next/link";
 
 export interface ChatMessage {
-  type: "user" | "bot"; // Define the types for the message
+  type: "user" | "bot";
   message: string;
 }
 
@@ -20,6 +20,7 @@ export default function Playground() {
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
+  const [trigger, setTrigger] = useState(false);
 
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
@@ -77,6 +78,7 @@ export default function Playground() {
         ...prevChatLog,
         { type: "bot", message: response.data.response },
       ]);
+      setTrigger(prev => !prev);
     });
   };
 
@@ -268,7 +270,7 @@ export default function Playground() {
                 </div>
               </div>
             </div>
-            <Memories />
+            <Memories trigger={trigger} />
           </div>
         </div>
       </div>

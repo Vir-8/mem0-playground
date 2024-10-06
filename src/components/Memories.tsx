@@ -1,8 +1,28 @@
-import { useState } from "react";
-import MemoryItem from "./MemoryItem";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import {MemoryItem} from "./MemoryItem";
 
-export default function Memories() {
+interface Memory {
+  categories: string[],
+  id: string,
+  updated_at: string,
+  memory: string
+}
+
+export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [memories, setMemories] = useState<Memory[]>([]);
+
+  useEffect(() => {
+    const url = "http://localhost:8000/api/fetch-memories/";
+    const data = {
+      userId: 'new_user'
+    };
+    axios.post(url, data).then((response) => {
+      console.log(response)
+      setMemories(response.data.response.results)
+    });
+  }, [trigger]);
 
   return (
     <aside
@@ -25,7 +45,9 @@ export default function Memories() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`lucide lucide-chevron-right h-4 w-4 transition-transform ease-in-out duration-500 ${isCollapsed ? "-rotate-180" : "rotate-0"}`}
+            className={`lucide lucide-chevron-right h-4 w-4 transition-transform ease-in-out duration-500 ${
+              isCollapsed ? "-rotate-180" : "rotate-0"
+            }`}
           >
             <path d="m9 18 6-6-6-6"></path>
           </svg>
@@ -76,12 +98,15 @@ export default function Memories() {
             </div>
           </div>
           <div dir="ltr" className="relative overflow-hidden flex-grow px-2">
-            <MemoryItem />
-            <MemoryItem />
-            <MemoryItem />
+          {memories
+            .slice()
+            .reverse()
+            .map(memory => (
+            <MemoryItem key={memory.id} id={memory.memory}/>
+          ))}
           </div>
         </>
       )}
     </aside>
   );
-}
+};

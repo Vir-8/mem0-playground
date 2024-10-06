@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import handle_message
+from .views import *
 
 urlpatterns = [
     path('generate-response/', handle_message),
+    path('fetch-memories/', fetch_memories),
 ]

@@ -1,4 +1,10 @@
-export default function MemoryItem() {
+interface MemoryItemProps {
+  id: string
+}
+
+export const MemoryItem: React.FC<MemoryItemProps> = ({
+  id
+}) => {
 
   return (
     <div
@@ -13,7 +19,7 @@ export default function MemoryItem() {
           aria-controls="radix-:r8:"
           data-state="closed"
         >
-          <div className="text-sm mb-2 line-clamp-2">Likes Mem0</div>
+          <div className="text-sm mb-2 line-clamp-2">{id}</div>
           <div className="flex items-center text-xs text-muted-foreground mb-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
