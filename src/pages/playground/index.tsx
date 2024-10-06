@@ -13,16 +13,30 @@ export interface ChatMessage {
   message: string;
 }
 
+type ModelOption = {
+  label: string;
+  value: string;
+};
+
 export default function Playground() {
   const [inputValue, setInputValue] = useState("");
   const [chatLog, setChatLog] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [userId, setUserId] = useState<string>()
+  const [userId, setUserId] = useState<string>();
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [trigger, setTrigger] = useState(false);
 
+  const options: ModelOption[] = [
+    { label: "Google: gemini-1.5-flash", value: "gemini/gemini-1.5-flash" },
+    { label: "Google: gemini-1.5-flash-8b", value: "gemini/gemini-1.5-flash-8b" }
+  ];
+
+  const [isModelDropdownOpen, setModelDropdownOpen] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<ModelOption>(options[0]);
+
+  const dropdownRef = useRef<HTMLButtonElement>(null); 
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
   const dummyMessage = `<p>👋 Hi there! I'm mem0.ai, your personal assistant. How can I help you today? 😊</p> <br />
@@ -51,17 +65,19 @@ export default function Playground() {
   };
 
   const handleSubmit = () => {
-    setChatLog((prevChatLog) => [
-      ...prevChatLog,
-      { type: "user", message: inputValue },
-    ]);
-    if (!currentChat || !currentChat.title) {
-      handleNewChat(inputValue);
-    } else if (currentChat) {
-      chatService.updateChat({ type: "user", message: inputValue });
+    if (inputValue) {
+      setChatLog((prevChatLog) => [
+        ...prevChatLog,
+        { type: "user", message: inputValue },
+      ]);
+      if (!currentChat || !currentChat.title) {
+        handleNewChat(inputValue);
+      } else if (currentChat) {
+        chatService.updateChat({ type: "user", message: inputValue });
+      }
+      sendMessage(inputValue);
+      setInputValue("");  
     }
-    sendMessage(inputValue);
-    setInputValue("");
   };
 
   // Send a message to the backend and render LLM response in the chat.
@@ -71,6 +87,7 @@ export default function Playground() {
     const data = {
       userMessage: message,
       userId: userId,
+      model: selectedModel.value
     };
     axios.post(url, data).then((response) => {
       setIsLoading(false);
@@ -116,9 +133,15 @@ export default function Playground() {
   useEffect(() => {
     const userId = chatService.getUserId();
     const loadedChats = chatService.getChats();
-    setUserId(userId)
+    setUserId(userId);
     setChats(loadedChats);
     createEmptyChat();
+
+    document.addEventListener('click', (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setModelDropdownOpen(false)
+      }
+    })
   }, []);
 
   return (
@@ -169,13 +192,55 @@ export default function Playground() {
                       aria-haspopup="dialog"
                       aria-controls="radix-:r10:"
                       data-state="closed"
+                      onClick={() => setModelDropdownOpen(true)}
+                      ref={dropdownRef}
                     >
-                      Google: gemini-1.5-flash
+                      {selectedModel.label}
                       <img src="/images/dropdown.svg" alt="Dropdown Icon" />
                     </button>
                   </div>
                 </div>
-
+                {isModelDropdownOpen && (
+                  <div className="absolute right-0 z-10 mt-11 mr-2 w-min shadow-md rounded-md bg-white">
+                    <div
+                      className="py-1"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="options-menu"
+                    >
+                      {options.map((option, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-background hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 md:w-[300px] w-full text-ellipsis overflow-hidden"
+                          role="option"
+                          aria-disabled="false"
+                          aria-selected="true"
+                          data-disabled="false"
+                          data-selected="true"
+                          data-value="gpt-4o-mini"
+                          onClick={() => setSelectedModel(option)}
+                        >
+                          <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`mr-2 h-4 w-4 ${option.value === selectedModel.value ? 'opacity-100' : 'opacity-0'}`}
+                          >
+                            <path
+                              d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                            ></path>
+                          </svg>
+                          <span className="font-normal">{option.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div className="chat-content h-full">
                   <div ref={chatAreaRef} className="flex flex-col pb-24">
                     {chatLog.map((message, index) => (
@@ -246,7 +311,11 @@ export default function Playground() {
                           }
                         }}
                       ></textarea>
-                      <button className="submit-val" type="submit" disabled={isLoading}>
+                      <button
+                        className="submit-val"
+                        type="submit"
+                        disabled={isLoading}
+                      >
                         <img src="/images/submit.svg" alt="Submit Button" />
                       </button>
                     </form>

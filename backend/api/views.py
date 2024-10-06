@@ -24,11 +24,9 @@ def handle_message(request):
         data = json.loads(request.body)
         user_message = data.get('userMessage')
         user_id = data.get('userId')
+        model = data.get('model')
     except (json.JSONDecodeError, KeyError):
-        return JsonResponse({"message": "User message and ID is required"}, status=400)
-
-    if not user_message:
-        return JsonResponse({"message": "User message and ID is required"}, status=400)
+        return JsonResponse({"message": "Missing either user message, user ID or model."}, status=400)
 
     # Interact with Google Generative AI
     try:
@@ -49,7 +47,7 @@ def handle_message(request):
             "llm": {
                 "provider": "litellm",
                 "config": {
-                    "model": "gemini/gemini-1.5-flash",
+                    "model": model,
                     "temperature": 0.2,
                     "max_tokens": 1500,
                     "api_key": env("GEMINI_API_KEY")
@@ -68,7 +66,7 @@ def handle_message(request):
 
         chat_completion = client.chat.completions.create(
             messages=messages,
-            model="gemini/gemini-1.5-flash",
+            model=model,
             user_id=user_id,
             api_key=env("GEMINI_API_KEY")
         )
