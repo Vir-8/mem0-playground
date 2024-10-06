@@ -14,6 +14,10 @@ RUN npm install
 # Copy the rest of your Next.js app to the working directory
 COPY . .
 
+ENV NODE_ENV=development
+ENV CHOKIDAR_USEPOLLING=true
+ENV WATCHPACK_POLLING=true
+
 # Expose the port Next.js will run on
 EXPOSE 3000
 

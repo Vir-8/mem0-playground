@@ -26,15 +26,16 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
 
   return (
     <aside
-      className={`memories relative z-50 -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 ${
+      className={`memories pt-2.5 relative z-50 -translate-x-full lg:translate-x-0 transition-[width] ease-in-out duration-300 ${
         isCollapsed ? "w-[25px]" : "w-96"
       }`}
     >
       <div
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 -left-2 z-20"
+        className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 -left-4 z-20"
       >
-        <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md w-8 h-8">
+        <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md w-8 h-8"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -57,7 +58,7 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
         <>
           <div className="flex justify-between items-center w-full p-2">
             <div className="flex flex-1 items-center gap-2">
-              <h2 className="text-med pr-2 font-semibold">Your Memories (1)</h2>
+              <h2 className="text-med pr-2 font-semibold">Your Memories ({memories.length})</h2>
             </div>
             <div className="flex justify-end">
               <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9">
@@ -104,6 +105,12 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
             .map(memory => (
             <MemoryItem key={memory.id} id={memory.memory}/>
           ))}
+          {!memories &&
+          <p>
+            No memories found.
+            Your memories will appear here.
+          </p>
+          }
           </div>
         </>
       )}

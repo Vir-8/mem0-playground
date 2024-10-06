@@ -25,6 +25,10 @@ export const chatService = {
     currentChatId = chatId;
   },
 
+  getCurrentChatId: () => {
+    return currentChatId;
+  },
+
   updateChat: (newMessage: ChatMessage) => {
     const chats = JSON.parse(localStorage.getItem("chats") || "[]");
     const updatedChats = chats.map((chat: Chat) =>
