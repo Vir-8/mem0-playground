@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import {MemoryItem} from "./MemoryItem";
+import { chatService } from "@/services/chatService";
 
 interface Memory {
   categories: string[],
@@ -11,18 +12,44 @@ interface Memory {
 
 export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [memories, setMemories] = useState<Memory[]>([]);
+  const [userId, setUserId] = useState<string>()
 
-  useEffect(() => {
+  const fetchMemories = () => {
+    setIsLoading(true)
     const url = "http://localhost:8000/api/fetch-memories/";
     const data = {
-      userId: 'new_user'
+      userId: userId
     };
     axios.post(url, data).then((response) => {
       console.log(response)
       setMemories(response.data.response.results)
+      setIsLoading(false)
     });
+  }
+
+  const deleteAllMemories = () => {
+    setIsLoading(true)
+    const url = "http://localhost:8000/api/delete-memories/";
+    const data = {
+      userId: userId
+    };
+    axios.post(url, data).then(() => {
+      fetchMemories();
+    });
+  }
+
+  useEffect(() => {
+    if (userId) {
+      fetchMemories()
+    }
   }, [trigger]);
+
+  useEffect(() => {
+    const userId = chatService.getUserId()
+    setUserId(userId)
+  }, [])
 
   return (
     <aside
@@ -61,7 +88,10 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
               <h2 className="text-med pr-2 font-semibold">Your Memories ({memories.length})</h2>
             </div>
             <div className="flex justify-end">
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9">
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
+                onClick={fetchMemories}
+                disabled={isLoading}
+              >
                 <svg
                   width="15"
                   height="15"
@@ -78,7 +108,10 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
                   ></path>
                 </svg>
               </button>
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9">
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
+                onClick={deleteAllMemories}
+                disabled={isLoading}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -103,7 +136,7 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
             .slice()
             .reverse()
             .map(memory => (
-            <MemoryItem key={memory.id} id={memory.memory}/>
+            <MemoryItem key={memory.id} memory={memory.memory} categories={memory.categories} updated_at={memory.updated_at}/>
           ))}
           {!memories &&
           <p>

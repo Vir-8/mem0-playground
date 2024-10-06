@@ -64,7 +64,8 @@ div {
 }
 
 .new-chat-button {
-  background-color: white;
+  background-color: rgb(251, 251, 251);
+  border: 1px solid #b0b0b0;
   transition: 0.2s;
 }
 
@@ -91,7 +92,7 @@ div {
 
 .chat-content > div {
   overflow-y: scroll;
-  max-height: calc(100% - 110px);
+  max-height: calc(100% - 70px);
   padding-bottom: 40px;
   scrollbar-width: thin;
   scrollbar-color: #b8b8b8 #dfdfdf;

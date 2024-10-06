@@ -17,6 +17,7 @@ export default function Playground() {
   const [inputValue, setInputValue] = useState("");
   const [chatLog, setChatLog] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string>()
 
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
@@ -69,7 +70,7 @@ export default function Playground() {
     const url = "http://localhost:8000/api/generate-response/";
     const data = {
       userMessage: message,
-      userId: "new_user",
+      userId: userId,
     };
     axios.post(url, data).then((response) => {
       setIsLoading(false);
@@ -113,7 +114,9 @@ export default function Playground() {
 
   // Load existing chats on initialization.
   useEffect(() => {
+    const userId = chatService.getUserId();
     const loadedChats = chatService.getChats();
+    setUserId(userId)
     setChats(loadedChats);
     createEmptyChat();
   }, []);
@@ -158,28 +161,6 @@ export default function Playground() {
               <div className="chat pt-2.5 relative flex flex-col w-full">
                 <div className="z-1 sticky top-0 z-20 flex justify-end bg-background py-1 h-fit">
                   <div className="flex gap-4 pr-2 pl-2 items-center">
-                    <div className="relative w-50">
-                      <input
-                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 pr-8"
-                        placeholder="User Id"
-                        type="text"
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-arrow-right absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600"
-                      >
-                        <path d="M5 12h14"></path>
-                        <path d="m12 5 7 7-7 7"></path>
-                      </svg>
-                    </div>
                     <button
                       className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 md:w-[300px] w-full justify-between text-ellipsis overflow-hidden"
                       role="combobox"
@@ -250,6 +231,7 @@ export default function Playground() {
                         handleSubmit();
                       }}
                       className="flex justify-between w-full gap-2 chat-bar"
+                      aria-disabled={isLoading}
                     >
                       <textarea
                         name="message"
@@ -258,13 +240,13 @@ export default function Playground() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
+                          if (e.key === "Enter" && !e.shiftKey && !isLoading) {
                             e.preventDefault();
                             handleSubmit();
                           }
                         }}
                       ></textarea>
-                      <button className="submit-val" type="submit">
+                      <button className="submit-val" type="submit" disabled={isLoading}>
                         <img src="/images/submit.svg" alt="Submit Button" />
                       </button>
                     </form>

@@ -117,3 +117,32 @@ def fetch_memories(request):
     except Exception as e:
         return JsonResponse({"message": str(e)}, status=500)
 
+@csrf_exempt
+def delete_memories(request):
+    # Check if the request is a POST
+    if request.method != "POST":
+        return JsonResponse({"message": "Only POST requests are allowed"}, status=405)
+
+    # Check referer if not in development mode
+    referer = request.headers.get('Referer')
+    if os.getenv("DEBUG") != "True":
+        if not referer or referer != os.getenv("APP_URL"):
+            return JsonResponse({"message": "Unauthorized"}, status=401)
+
+    # Parse the body to get the userMessage
+    try:
+        data = json.loads(request.body)
+        user_id = data.get('userId')
+    except (json.JSONDecodeError, KeyError):
+        return JsonResponse({"message": "User ID is required"}, status=400)
+
+    if not user_id:
+        return JsonResponse({"message": "User ID is required"}, status=400)
+
+    # Interact with Google Generative AI
+    try:
+        client = MemoryClient(api_key=env("MEM0_KEY"))
+        client.delete_all(user_id=user_id)
+        return JsonResponse({"response": "Successfully deleted all memories for user: " + user_id}, status=200)
+    except Exception as e:
+        return JsonResponse({"message": str(e)}, status=500)
