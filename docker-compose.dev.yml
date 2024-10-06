@@ -4,20 +4,25 @@ services:
   nextjs:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
     env_file:
       - .env.local
     volumes:
       - ./:/app
+      - ./src:/src
+      - ./src/pages:/src/pages
+      - ./src/components:/src/components
+      - ./public:/public
+      - ./package.json:/package.json
     depends_on:
       - django
 
   django:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8000:8000"
     env_file:
