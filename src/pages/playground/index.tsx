@@ -98,7 +98,6 @@ export default function Playground() {
   const sendMessage = async (newChatLog: ChatMessage[]) => {
     setIsLoading(true);
     const url = `${process.env.NEXT_PUBLIC_API_URL}/generate-response/`;
-    console.log(newChatLog)
     const data = {
       userMessage: newChatLog,
       userId: userId,
