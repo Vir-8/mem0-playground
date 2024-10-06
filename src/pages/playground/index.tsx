@@ -29,14 +29,20 @@ export default function Playground() {
   const [trigger, setTrigger] = useState(false);
 
   const options: ModelOption[] = [
-    { label: "Google: gemini-1.5-flash", value: "gemini/gemini-1.5-flash" },
-    { label: "Google: gemini-1.5-flash-8b", value: "gemini/gemini-1.5-flash-8b" }
+    {
+      label: "Google: gemini-1.5-flash",
+      value: "gemini/gemini-1.5-flash",
+    },
+    {
+      label: "Google: gemini-1.5-flash-8b",
+      value: "gemini/gemini-1.5-flash-8b",
+    },
   ];
 
   const [isModelDropdownOpen, setModelDropdownOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState<ModelOption>(options[0]);
 
-  const dropdownRef = useRef<HTMLButtonElement>(null); 
+  const dropdownRef = useRef<HTMLButtonElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
   const dummyMessage = `<p>👋 Hi there! I'm mem0.ai, your personal assistant. How can I help you today? 😊</p> <br />
@@ -76,18 +82,18 @@ export default function Playground() {
         chatService.updateChat({ type: "user", message: inputValue });
       }
       sendMessage(inputValue);
-      setInputValue("");  
+      setInputValue("");
     }
   };
 
   // Send a message to the backend and render LLM response in the chat.
   const sendMessage = async (message: string) => {
     setIsLoading(true);
-    const url = "http://localhost:8000/api/generate-response/";
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/generate-response/`;
     const data = {
       userMessage: message,
       userId: userId,
-      model: selectedModel.value
+      model: selectedModel.value,
     };
     axios.post(url, data).then((response) => {
       setIsLoading(false);
@@ -137,11 +143,14 @@ export default function Playground() {
     setChats(loadedChats);
     createEmptyChat();
 
-    document.addEventListener('click', (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setModelDropdownOpen(false)
+    document.addEventListener("click", (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setModelDropdownOpen(false);
       }
-    })
+    });
   }, []);
 
   return (
@@ -169,7 +178,12 @@ export default function Playground() {
           >
             Playground
           </Link>
-          <img className="mr-6" src="/images/settings.svg" alt="Settings Icon" width={20} />
+          <img
+            className="mr-6"
+            src="/images/settings.svg"
+            alt="Settings Icon"
+            width={20}
+          />
           <img src="/images/user.svg" alt="User Icon" width={36} />
         </div>
       </div>
@@ -228,7 +242,7 @@ export default function Playground() {
                             viewBox="0 0 15 15"
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
-                            className={`mr-2 h-4 w-4 ${option.value === selectedModel.value ? 'opacity-100' : 'opacity-0'}`}
+                            className={`mr-2 h-4 w-4 ${option.value === selectedModel.value ? "opacity-100" : "opacity-0"}`}
                           >
                             <path
                               d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"

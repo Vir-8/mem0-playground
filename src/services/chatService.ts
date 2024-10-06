@@ -1,6 +1,6 @@
 import { Chat } from "@/components/ChatList";
 import { ChatMessage } from "../pages/playground";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 let currentChatId: number;
 
@@ -31,11 +31,11 @@ export const chatService = {
   },
 
   getUserId: () => {
-    let userId = localStorage.getItem('userId');
+    let userId = localStorage.getItem("userId");
 
     if (!userId) {
       userId = uuidv4();
-      localStorage.setItem('userId', userId);
+      localStorage.setItem("userId", userId);
     }
 
     return userId;

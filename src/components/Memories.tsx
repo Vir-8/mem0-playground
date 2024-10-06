@@ -1,55 +1,61 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import {MemoryItem} from "./MemoryItem";
+import { MemoryItem } from "./MemoryItem";
 import { chatService } from "@/services/chatService";
 
 interface Memory {
-  categories: string[],
-  id: string,
-  updated_at: string,
-  memory: string
+  categories: string[];
+  id: string;
+  updated_at: string;
+  memory: string;
 }
 
 export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [memories, setMemories] = useState<Memory[]>([]);
-  const [userId, setUserId] = useState<string>()
+  const [userId, setUserId] = useState<string>();
 
   const fetchMemories = () => {
-    setIsLoading(true)
-    const url = "http://localhost:8000/api/fetch-memories/";
+    setIsLoading(true);
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/fetch-memories/`;
     const data = {
-      userId: userId
+      userId: userId,
     };
     axios.post(url, data).then((response) => {
-      console.log(response)
-      setMemories(response.data.response.results)
-      setIsLoading(false)
+      console.log(response);
+      setMemories(response.data.response.results);
+      setIsLoading(false);
     });
-  }
+  };
 
   const deleteAllMemories = () => {
-    setIsLoading(true)
-    const url = "http://localhost:8000/api/delete-memories/";
+    setIsLoading(true);
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/delete-memories/`;
     const data = {
-      userId: userId
+      userId: userId,
     };
     axios.post(url, data).then(() => {
       fetchMemories();
     });
-  }
+  };
 
   useEffect(() => {
     if (userId) {
-      fetchMemories()
+      fetchMemories();
     }
   }, [trigger]);
 
   useEffect(() => {
-    const userId = chatService.getUserId()
+    const userId = chatService.getUserId();
     setUserId(userId)
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchMemories();
+    }
+  }, [userId]);
 
   return (
     <aside
@@ -57,10 +63,9 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
         isCollapsed ? "w-[25px]" : "w-96"
       }`}
     >
-      <div
-        className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 -left-4 z-20"
-      >
-        <button className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md w-8 h-8"
+      <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 -left-4 z-20">
+        <button
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground rounded-md w-8 h-8"
           onClick={() => setIsCollapsed(!isCollapsed)}
         >
           <svg
@@ -85,10 +90,13 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
         <>
           <div className="flex justify-between items-center w-full p-2 pl-4">
             <div className="flex flex-1 items-center gap-2">
-              <h2 className="text-med pr-2 font-semibold">Your Memories ({memories.length})</h2>
+              <h2 className="text-med pr-2 font-semibold">
+                Your Memories ({memories.length})
+              </h2>
             </div>
             <div className="flex justify-end">
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
                 onClick={fetchMemories}
                 disabled={isLoading}
               >
@@ -108,7 +116,8 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
                   ></path>
                 </svg>
               </button>
-              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent/30 hover:text-accent-foreground h-9 w-9"
                 onClick={deleteAllMemories}
                 disabled={isLoading}
               >
@@ -132,18 +141,22 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
             </div>
           </div>
           <div dir="ltr" className="relative overflow-hidden flex-grow px-2">
-          {memories
-            .slice()
-            .reverse()
-            .map(memory => (
-            <MemoryItem key={memory.id} memory={memory.memory} categories={memory.categories} updated_at={memory.updated_at}/>
-          ))}
-          {memories.length === 0 &&
-          <p className="mt-4 text-center">
-            No memories found.
-            Your memories will appear here.
-          </p>
-          }
+            {memories
+              .slice()
+              .reverse()
+              .map((memory) => (
+                <MemoryItem
+                  key={memory.id}
+                  memory={memory.memory}
+                  categories={memory.categories}
+                  updated_at={memory.updated_at}
+                />
+              ))}
+            {memories.length === 0 && (
+              <p className="mt-4 text-center">
+                No memories found. Your memories will appear here.
+              </p>
+            )}
           </div>
         </>
       )}

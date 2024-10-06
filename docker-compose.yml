@@ -1,18 +1,18 @@
-version: '3'
+version: "3"
 
 services:
   nextjs:
     build:
-      context: .  # Use the current directory for the Next.js app
-      dockerfile: Dockerfile  # Dockerfile for Next.js should be in the same directory as docker-compose.yml
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"  # Expose Next.js app on localhost:3000
+      - "3000:3000"
     env_file:
       - .env.local
     environment:
       - NODE_ENV=development
     volumes:
-      - ./:/app  # Mount the app code for hot reloading
+      - ./:/app
       - ./src:/src
       - ./src/pages:/src/pages
       - ./src/components:/src/components
@@ -23,12 +23,12 @@ services:
 
   django:
     build:
-      context: ./backend  # Path to your Django app
-      dockerfile: Dockerfile  # Dockerfile for Django should be in the backend directory
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8000:8000"  # Expose Django app on localhost:8000
+      - "8000:8000"
     env_file:
       - .env.local
 
     volumes:
-      - ./backend:/app  # Mount the app code for hot reloading
+      - ./backend:/app

@@ -18,6 +18,8 @@ ENV NODE_ENV=development
 ENV CHOKIDAR_USEPOLLING=true
 ENV WATCHPACK_POLLING=true
 
+RUN npm run build
+
 # Expose the port Next.js will run on
 EXPOSE 3000
 

@@ -1,5 +1,6 @@
 import ChatListItem from "./ChatListItem";
 import { ChatMessage } from "@/pages/playground";
+import React from "react";
 import { useState } from "react";
 
 export interface Chat {
@@ -99,7 +100,7 @@ export const ChatList: React.FC<ChatListProps> = ({
           >
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className={`new-chat-button w-fit inline-flex cursor-pointer items-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground w-full justify-center h-10 py-2 px-2`}
+              className={`new-chat-button w-fit inline-flex cursor-pointer items-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground justify-center h-10 py-2 px-2`}
             >
               <span>
                 <img src="/images/sidebar.svg" alt="Sidebar Icon" />
@@ -107,7 +108,7 @@ export const ChatList: React.FC<ChatListProps> = ({
             </button>
             <button
               onClick={handleAddNewChat}
-              className={`new-chat-button w-fit inline-flex cursor-pointer items-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground w-full justify-center h-10 py-2 px-2`}
+              className={`new-chat-button w-fit inline-flex cursor-pointer items-center whitespace-nowrap rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground justify-center h-10 py-2 px-2`}
             >
               <span>
                 <img src="/images/pen.svg" alt="Pen Icon" />
@@ -125,9 +126,12 @@ export const ChatList: React.FC<ChatListProps> = ({
                   lastCategory = currentCategory;
 
                   return (
-                    <>
+                    <React.Fragment key={`${currentCategory}-${chat.id}`}>
                       {showHeader && (
-                        <p id={currentCategory} className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate">
+                        <p
+                          key={currentCategory}
+                          className="text-sm font-medium text-muted-foreground px-4 pb-2 max-w-[248px] truncate"
+                        >
                           {currentCategory}
                         </p>
                       )}
@@ -146,7 +150,7 @@ export const ChatList: React.FC<ChatListProps> = ({
                           id={chat.id}
                         />
                       </div>
-                    </>
+                    </React.Fragment>
                   );
                 })}
             </li>

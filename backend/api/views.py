@@ -2,8 +2,7 @@ import os
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import google.generativeai as genai
-from mem0 import Memory, MemoryClient
+from mem0 import MemoryClient
 from mem0.proxy.main import Mem0
 from config.env import env
 
@@ -19,7 +18,6 @@ def handle_message(request):
         if not referer or referer != os.getenv("APP_URL"):
             return JsonResponse({"message": "Unauthorized"}, status=401)
 
-    # Parse the body to get the userMessage
     try:
         data = json.loads(request.body)
         user_message = data.get('userMessage')
@@ -70,7 +68,6 @@ def handle_message(request):
             user_id=user_id,
             api_key=env("GEMINI_API_KEY")
         )
-        print(chat_completion)
         formatted_response = (
             chat_completion.choices[0].message.content
             .replace("\n", "<br />")  # Convert new lines to <br />
@@ -94,7 +91,6 @@ def fetch_memories(request):
         if not referer or referer != os.getenv("APP_URL"):
             return JsonResponse({"message": "Unauthorized"}, status=401)
 
-    # Parse the body to get the userMessage
     try:
         data = json.loads(request.body)
         user_id = data.get('userId')
@@ -104,12 +100,9 @@ def fetch_memories(request):
     if not user_id:
         return JsonResponse({"message": "User ID is required"}, status=400)
 
-    # Interact with Google Generative AI
     try:
         client = MemoryClient(api_key=env("MEM0_KEY"))
         user_memories = client.get_all(user_id=user_id, output_format="v1.1")
-
-        print(user_memories)
 
         return JsonResponse({"response": user_memories}, status=200)
     except Exception as e:
@@ -127,7 +120,6 @@ def delete_memories(request):
         if not referer or referer != os.getenv("APP_URL"):
             return JsonResponse({"message": "Unauthorized"}, status=401)
 
-    # Parse the body to get the userMessage
     try:
         data = json.loads(request.body)
         user_id = data.get('userId')
@@ -137,7 +129,6 @@ def delete_memories(request):
     if not user_id:
         return JsonResponse({"message": "User ID is required"}, status=400)
 
-    # Interact with Google Generative AI
     try:
         client = MemoryClient(api_key=env("MEM0_KEY"))
         client.delete_all(user_id=user_id)

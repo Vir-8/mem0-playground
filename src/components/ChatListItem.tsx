@@ -8,13 +8,13 @@ type ChatListItemProps = {
 };
 
 const ChatListItem: React.FC<ChatListItemProps> = ({ id, title, date }) => {
-  const currentChatId = chatService.getCurrentChatId()
+  const currentChatId = chatService.getCurrentChatId();
   return (
     <div className="w-full px-2">
       <a
         href="#"
         className={`chat-list-item inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium hover:text-accent-foreground px-4 py-2 w-full h-full justify-start mb-1 ${
-          id === currentChatId ? 'chat-list-item-selected' : ''
+          id === currentChatId ? "chat-list-item-selected" : ""
         }`}
       >
         <div className="line-clamp-2">

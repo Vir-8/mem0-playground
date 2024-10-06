@@ -1,31 +1,30 @@
 interface MemoryItemProps {
-  memory: string,
-  categories: string[],
-  updated_at: string
+  memory: string;
+  categories: string[];
+  updated_at: string;
 }
 
 export const MemoryItem: React.FC<MemoryItemProps> = ({
   memory,
   categories,
-  updated_at
+  updated_at,
 }) => {
-
   const formatDate = (dateString: string) => {
     // Create a new Date object from the date string
     const date = new Date(dateString);
 
     // Get individual components
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const year = date.getFullYear();
-    
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
 
     // Format the date and time
     return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
-  }
+  };
 
   return (
     <div
@@ -60,14 +59,17 @@ export const MemoryItem: React.FC<MemoryItemProps> = ({
             {formatDate(updated_at)}
           </div>
           <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-            <div key={category} className="inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-xs">
-              {category}
-            </div>
+            {categories.map((category) => (
+              <div
+                key={category}
+                className="inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 text-xs"
+              >
+                {category}
+              </div>
             ))}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
