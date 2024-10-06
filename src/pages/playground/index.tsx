@@ -34,8 +34,8 @@ export default function Playground() {
       value: "gemini/gemini-1.5-flash",
     },
     {
-      label: "Google: gemini-1.5-flash-8b",
-      value: "gemini/gemini-1.5-flash-8b",
+      label: "Google: gemini-1.5-pro",
+      value: "gemini/gemini-1.5-pro",
     },
   ];
 
@@ -58,6 +58,7 @@ export default function Playground() {
     <p>Go ahead, ask me anything! Let's make your experience extraordinary. 🌟</p>
   `;
 
+  // Create an empty chat on opening the page or clicking the create button.
   const createEmptyChat = () => {
     const emptyChat: Chat = {
       id: Date.now(),
@@ -70,6 +71,7 @@ export default function Playground() {
     setChatLog(() => [{ type: "bot", message: dummyMessage }]);
   };
 
+  // Handle submitting input in the chat interface.
   const handleSubmit = () => {
     if (inputValue) {
       setChatLog((prevChatLog) => [
@@ -106,7 +108,7 @@ export default function Playground() {
     });
   };
 
-  // On sending a message in an empty chat, store it as a new chat.
+  // On sending a message in an empty chat, save it as a new chat.
   const handleNewChat = (title: string) => {
     const newChat = chatService.createNewChat(title, currentChat?.id || null);
     chatService.setCurrentChatId(newChat.id);

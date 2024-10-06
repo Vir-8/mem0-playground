@@ -32,6 +32,7 @@ export const ChatList: React.FC<ChatListProps> = ({
     onSelectChat(chat);
   };
 
+  // Convert timestamps to format of "Oct 27, 2024, 10:25:38 AM"
   const getFormattedDate = (timestamp: number) => {
     const date = new Date(timestamp);
 
@@ -67,6 +68,7 @@ export const ChatList: React.FC<ChatListProps> = ({
 
   let lastCategory = "";
 
+  // In order to categorize the chat list based on creation dates of chats.
   const getDateCategory = (timestamp: number): string => {
     const date = new Date(timestamp);
     const currentDate = new Date(Date.now());
@@ -117,6 +119,11 @@ export const ChatList: React.FC<ChatListProps> = ({
           </li>
           {!isCollapsed && (
             <li className="w-full pt-2 items-start chat-list-items-container">
+              {chats.length === 0 && (
+                <p className="pt-4 text-center text-balance">
+                  No chats found! Type a message to start one.
+                </p>
+              )}
               {chats
                 .slice()
                 .reverse()

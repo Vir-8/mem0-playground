@@ -50,7 +50,7 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
 
   useEffect(() => {
     const userId = chatService.getUserId();
-    setUserId(userId)
+    setUserId(userId);
   }, []);
 
   useEffect(() => {
