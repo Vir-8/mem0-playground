@@ -23,7 +23,6 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
       userId: userId,
     };
     axios.post(url, data).then((response) => {
-      console.log(response);
       setMemories(response.data.response.results);
       setIsLoading(false);
     });
@@ -42,7 +41,10 @@ export const Memories: React.FC<{ trigger: boolean }> = ({ trigger }) => {
 
   useEffect(() => {
     if (userId) {
-      fetchMemories();
+      const timeoutId = setTimeout(() => {
+        fetchMemories();
+      }, 3000);
+      return () => clearTimeout(timeoutId);
     }
   }, [trigger]);
 
