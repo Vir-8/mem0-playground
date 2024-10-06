@@ -52,7 +52,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Next.js frontend running on port 3000
+    "http://localhost:3000",
+    "https://mem0-playground.vercel.app",
 ]
 
 ROOT_URLCONF = 'config.urls'
