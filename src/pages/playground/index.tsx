@@ -9,8 +9,8 @@ import { Chat } from "@/components/ChatList";
 import Link from "next/link";
 
 export interface ChatMessage {
-  type: "user" | "bot";
-  message: string;
+  role: "user" | "assistant";
+  content: string;
 }
 
 type ModelOption = {
@@ -64,47 +64,52 @@ export default function Playground() {
       const emptyChat: Chat = {
         id: Date.now(),
         title: "",
-        messages: [{ type: "bot", message: dummyMessage }],
+        messages: [{ role: "assistant", content: dummyMessage }],
       };
       setCurrentChat(emptyChat);
       chatService.setCurrentChatId(emptyChat.id);
-      chatService.updateChat({ type: "bot", message: dummyMessage });
-      setChatLog(() => [{ type: "bot", message: dummyMessage }]);
+      chatService.updateChat({ role: "assistant", content: dummyMessage });
+      setChatLog(() => [{ role: "assistant", content: dummyMessage }]);
     }
   };
 
   // Handle submitting input in the chat interface.
   const handleSubmit = () => {
     if (inputValue) {
-      setChatLog((prevChatLog) => [
-        ...prevChatLog,
-        { type: "user", message: inputValue },
-      ]);
+      let newChatLog: ChatMessage[] = [
+        ...chatLog,
+        { role: "user", content: inputValue },
+      ]
+      setChatLog(() => newChatLog);
       if (!currentChat || !currentChat.title) {
         handleNewChat(inputValue);
+        newChatLog = [
+          { role: "user", content: inputValue }
+        ]
       } else if (currentChat) {
-        chatService.updateChat({ type: "user", message: inputValue });
+        chatService.updateChat({ role: "user", content: inputValue });
       }
-      sendMessage(inputValue);
+      sendMessage(newChatLog);
       setInputValue("");
     }
   };
 
   // Send a message to the backend and render LLM response in the chat.
-  const sendMessage = async (message: string) => {
+  const sendMessage = async (newChatLog: ChatMessage[]) => {
     setIsLoading(true);
     const url = `${process.env.NEXT_PUBLIC_API_URL}/generate-response/`;
+    console.log(newChatLog)
     const data = {
-      userMessage: message,
+      userMessage: newChatLog,
       userId: userId,
       model: selectedModel.value,
     };
     axios.post(url, data).then((response) => {
       setIsLoading(false);
-      chatService.updateChat({ type: "bot", message: response.data.response });
+      chatService.updateChat({ role: "assistant", content: response.data.response });
       setChatLog((prevChatLog) => [
         ...prevChatLog,
-        { type: "bot", message: response.data.response },
+        { role: "assistant", content: response.data.response },
       ]);
       setTrigger((prev) => !prev);
     });
@@ -116,7 +121,7 @@ export default function Playground() {
     chatService.setCurrentChatId(newChat.id);
     setCurrentChat(() => newChat);
     setChats([...chats, newChat]);
-    chatService.updateChat({ type: "user", message: inputValue });
+    chatService.updateChat({ role: "user", content: inputValue });
   };
 
   // Select a chat from the list of chats.
@@ -268,7 +273,7 @@ export default function Playground() {
                         <div
                           key={index}
                           className={`flex p-4 gap-3 justify-start ${
-                            message.type === "user"
+                            message.role === "user"
                               ? "flex-row-reverse"
                               : "flex-row"
                           }`}
@@ -276,7 +281,7 @@ export default function Playground() {
                           <div className="relative shrink-0 overflow-hidden rounded-full flex self-center w-7 h-7">
                             <img
                               src={`${
-                                message.type === "user"
+                                message.role === "user"
                                   ? "/images/user.svg"
                                   : "/images/mem0.png"
                               }`}
@@ -285,12 +290,12 @@ export default function Playground() {
                           </div>
                           <div
                             className={`py-3 rounded-t-xl transition-none max-w-2xl block bg-card ${
-                              message.type === "user"
+                              message.role === "user"
                                 ? "px-2 rounded-bl-xl"
                                 : "bg-secondary px-5 rounded-br-xl"
                             }`}
                             dangerouslySetInnerHTML={{
-                              __html: message.message,
+                              __html: message.content,
                             }}
                           ></div>
                         </div>

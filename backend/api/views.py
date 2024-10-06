@@ -20,7 +20,7 @@ def handle_message(request):
 
     try:
         data = json.loads(request.body)
-        user_message = data.get('userMessage')
+        messages = data.get('userMessage')
         user_id = data.get('userId')
         model = data.get('model')
     except (json.JSONDecodeError, KeyError):
@@ -54,13 +54,6 @@ def handle_message(request):
         }
 
         client = Mem0(api_key=env("MEM0_KEY"), config=config)
-
-        messages = [
-          {
-            "role": "user",
-            "content": user_message,
-          }
-        ]
 
         chat_completion = client.chat.completions.create(
             messages=messages,
