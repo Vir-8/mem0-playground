@@ -33,7 +33,7 @@ export const ChatList: React.FC<ChatListProps> = ({
   };
 
   const getFormattedDate = (timestamp: number) => {
-    let date = new Date(timestamp);
+    const date = new Date(timestamp);
 
     const monthNames = [
       "Jan",
@@ -68,11 +68,11 @@ export const ChatList: React.FC<ChatListProps> = ({
   let lastCategory = "";
 
   const getDateCategory = (timestamp: number): string => {
-    let date = new Date(timestamp);
-    let currentDate = new Date(Date.now());
+    const date = new Date(timestamp);
+    const currentDate = new Date(Date.now());
 
-    let dayOfMonth = date.getDate();
-    let currentDayOfMonth = currentDate.getDate();
+    const dayOfMonth = date.getDate();
+    const currentDayOfMonth = currentDate.getDate();
 
     if (currentDayOfMonth === dayOfMonth) {
       return "Today";
